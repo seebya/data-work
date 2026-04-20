@@ -126,14 +126,15 @@
     }
 
     .hero-fw {
-      font-size: clamp(5.5rem, 20vw, 17rem);
+      font-size: clamp(5.5rem, 18vw, 15rem);
       font-weight: 700;
       letter-spacing: -0.04em;
       line-height: 0.88;
       color: var(--green-bright);
       text-transform: uppercase;
+      text-align: center;
       margin-bottom: 2.5rem;
-      /* mix-blend-mode so nodes show through letters slightly */
+      white-space: nowrap;
     }
 
     .hero-bottom {
@@ -618,8 +619,8 @@
 
     function computeTargets() {
       if (!W || !H) return;
-      // 3 cluster centers, horizontally distributed, vertically centered
-      var cy = H * 0.5;
+      // 3 cluster centers, horizontally distributed, sit in upper portion above text
+      var cy = H * 0.36;
       var centers = [
         { x: W * 0.22, y: cy },
         { x: W * 0.50, y: cy },
