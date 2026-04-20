@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Workflow Consulting — Clarity for Creative Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Tokens ──────────────────────────────────────────────── */
+    :root {
+      --bg:          #F5F3EF;
+      --surface:     #ECEAE4;
+      --ink:         #1C1C1A;
+      --ink-muted:   #6B6860;
+      --accent:      #3D6B6B;
+      --accent-light:#D4E4E4;
+      --rule:        #D0CEC8;
+      --white:       #FFFFFF;
+
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+
+      --space-xs:  0.5rem;
+      --space-sm:  1rem;
+      --space-md:  2rem;
+      --space-lg:  4rem;
+      --space-xl:  7rem;
+
+      --max-w: 72rem;
+      --gutter: 1.25rem;
+      --radius: 3px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:          #18181A;
+        --surface:     #222224;
+        --ink:         #EDEAE4;
+        --ink-muted:   #8A8880;
+        --accent:      #6BAAAA;
+        --accent-light:#1E3232;
+        --rule:        #2E2E30;
+        --white:       #1C1C1E;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ── Reset ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+
+    /* ── Layout helpers ──────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      padding-block: 1.1rem;
+    }
+    .nav-brand {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .nav-cta {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.45rem 1.1rem;
+      border-radius: var(--radius);
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      padding-block: var(--space-xl) var(--space-lg);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-kicker {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--space-md);
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 6vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      max-width: 16ch;
+      margin-bottom: var(--space-md);
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--ink-muted);
+      max-width: 46ch;
+      line-height: 1.7;
+      margin-bottom: var(--space-lg);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+    .btn-primary {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      background: var(--accent);
+      color: var(--white);
+      padding: 0.85rem 2rem;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .hero-note {
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+    }
+
+    /* ── Section base ────────────────────────────────────────── */
+    section { padding-block: var(--space-lg); }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 3rem;
+      height: 1px;
+      background: var(--rule);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--space-md);
+    }
+
+    /* ── What I do ───────────────────────────────────────────── */
+    .what {
+      border-bottom: 1px solid var(--rule);
+    }
+    .what-grid {
+      display: grid;
+      gap: var(--space-lg);
+    }
+    @media (min-width: 720px) {
+      .what-grid {
+        grid-template-columns: 1fr 2fr;
+        align-items: start;
+      }
+    }
+    .what-body {
+      font-size: 1.1rem;
+      line-height: 1.75;
+      color: var(--ink-muted);
+      max-width: 52ch;
+    }
+    .what-body strong { color: var(--ink); font-weight: 500; }
+
+    /* ── Services ────────────────────────────────────────────── */
+    .services {
+      border-bottom: 1px solid var(--rule);
+    }
+    .services-grid {
+      display: grid;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      border-radius: calc(var(--radius) + 1px);
+      overflow: hidden;
+      margin-top: var(--space-md);
+    }
+    @media (min-width: 600px) {
+      .services-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 900px) {
+      .services-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .service-card {
+      background: var(--white);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .service-icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .service-icon svg {
+      width: 1rem;
+      height: 1rem;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .service-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .service-desc {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+    /* 5th card gets full width on 3-col layout */
+    @media (min-width: 900px) {
+      .service-card:last-child {
+        grid-column: 3 / 4;
+      }
+    }
+
+    /* ── Why me ──────────────────────────────────────────────── */
+    .why {
+      border-bottom: 1px solid var(--rule);
+    }
+    .why-inner {
+      display: grid;
+      gap: var(--space-lg);
+    }
+    @media (min-width: 720px) {
+      .why-inner { grid-template-columns: 2fr 1fr; align-items: start; }
+    }
+    .why-pull {
+      font-family: var(--font-display);
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--ink);
+      padding-left: 1.5rem;
+      border-left: 3px solid var(--accent);
+    }
+    .why-stats {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      max-width: 20ch;
+    }
+
+    /* ── Contact ─────────────────────────────────────────────── */
+    .contact {
+      background: var(--surface);
+    }
+    .contact-grid {
+      display: grid;
+      gap: var(--space-lg);
+    }
+    @media (min-width: 720px) {
+      .contact-grid { grid-template-columns: 1fr 1.4fr; }
+    }
+    .contact-intro {
+      font-size: 1rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+      margin-top: var(--space-sm);
+    }
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      color: var(--accent);
+      text-decoration: none;
+      margin-top: var(--space-md);
+      font-weight: 500;
+    }
+    .contact-email:hover { text-decoration: underline; }
+
+    /* Form */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .form-row {
+      display: grid;
+      gap: 1.1rem;
+    }
+    @media (min-width: 480px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .field label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .field input,
+    .field textarea {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      width: 100%;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+    .form-submit {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .form-note {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding-block: var(--space-md);
+    }
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+    .footer-email {
+      font-size: 0.8rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .footer-email:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ──────────────────────────────────────────────────── -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="nav-brand">Data &amp; Workflow</a>
+        <a href="#contact" class="nav-cta">Work Together</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="container">
+      <span class="hero-kicker">Creative Operations Consulting</span>
+      <h1>Your assets, <em>finally</em> under control.</h1>
+      <p class="hero-sub">
+        I help creative teams and post-production studios bring structure to chaotic data
+        workflows — so your pipeline runs smoother and your team stops losing time to the mess.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Get in touch</a>
+        <span class="hero-note">No long commitments. Just clarity.</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── What I do ─────────────────────────────────────────────── -->
+  <section class="what">
+    <div class="container">
+      <div class="what-grid">
+        <div>
+          <p class="section-label">What I do</p>
+          <h2 class="section-title">Structure and flow for your creative systems.</h2>
+        </div>
+        <div>
+          <p class="what-body">
+            Whether you're drowning in assets, tangled in naming conventions, or running
+            critical workflows on gut instinct and spreadsheets — I bring <strong>ten-plus
+            years of hands-on operational experience</strong> to make it make sense.
+          </p>
+          <br />
+          <p class="what-body">
+            I've led metadata and post-production operations for major brands. I understand
+            the pressure of high-volume creative output and the cost of disorganized systems.
+            My work is practical, precise, and built to last beyond our engagement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ──────────────────────────────────────────────── -->
+  <section class="services">
+    <div class="container">
+      <p class="section-label">Services</p>
+      <h2 class="section-title">Where I can help.</h2>
+
+      <div class="services-grid">
+
+        <!-- 1 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <p class="service-title">Airtable &amp; Spreadsheet Design</p>
+          <p class="service-desc">
+            Structured bases, filtered views, and automations that turn scattered data into
+            a reliable system your whole team can use.
+          </p>
+        </div>
+
+        <!-- 2 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+          </div>
+          <p class="service-title">Metadata Tagging &amp; Delivery</p>
+          <p class="service-desc">
+            Cleanup, standardization, and delivery pipelines for asset metadata — so nothing
+            gets lost and every file is exactly where it should be.
+          </p>
+        </div>
+
+        <!-- 3 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+            </svg>
+          </div>
+          <p class="service-title">FileMaker Databases</p>
+          <p class="service-desc">
+            Custom FileMaker solutions for asset tracking, versioning, and status workflows
+            that match how your team actually works.
+          </p>
+        </div>
+
+        <!-- 4 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+          </div>
+          <p class="service-title">Workflow Docs &amp; Taxonomy</p>
+          <p class="service-desc">
+            Clear process documentation and standardized naming systems so every person on
+            your team speaks the same language.
+          </p>
+        </div>
+
+        <!-- 5 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="16 3 21 3 21 8"/>
+              <line x1="4" y1="20" x2="21" y2="3"/>
+              <polyline points="21 16 21 21 16 21"/>
+              <line x1="15" y1="15" x2="21" y2="21"/>
+            </svg>
+          </div>
+          <p class="service-title">Light Automation</p>
+          <p class="service-desc">
+            AppleScript, formula logic, and third-party tool integrations that remove
+            repetitive manual steps from your daily routine.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why me ─────────────────────────────────────────────────── -->
+  <section class="why">
+    <div class="container">
+      <p class="section-label">Why work with me</p>
+      <div class="why-inner">
+        <blockquote class="why-pull">
+          "I bring both structure and flow to your creative systems — because a good
+          operational backbone should feel invisible, not burdensome."
+        </blockquote>
+        <div class="why-stats">
+          <div class="stat">
+            <span class="stat-number">10+</span>
+            <span class="stat-label">Years leading post-production &amp; metadata operations</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">Major</span>
+            <span class="stat-label">Brands served — studios, agencies, content teams</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">End-to-end</span>
+            <span class="stat-label">From audit to documentation to live system</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ────────────────────────────────────────────────── -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <p class="section-label">Get in touch</p>
+          <h2 class="section-title">Ready to untangle your workflow?</h2>
+          <p class="contact-intro">
+            Tell me what you're dealing with — too many assets, a broken handoff, an
+            Airtable base that got away from you. I'll tell you if I can help.
+          </p>
+          <a href="mailto:silviaelenaok@gmail.com" class="contact-email">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            silviaelenaok@gmail.com
+          </a>
+        </div>
+
+        <form class="form" id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input type="text" id="name" name="name" placeholder="Alex Rivera" required />
+            </div>
+            <div class="field">
+              <label for="email">Your email</label>
+              <input type="email" id="email" name="email" placeholder="alex@studio.com" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">What's going on?</label>
+            <textarea id="message" name="message" placeholder="Describe your workflow challenge — assets, systems, team size, whatever's relevant…" required></textarea>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn-primary">Send message</button>
+            <span class="form-note">Opens your email client to send.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-copy">&copy; 2026 Data &amp; Workflow Consulting. All rights reserved.</p>
+        <a href="mailto:silviaelenaok@gmail.com" class="footer-email">silviaelenaok@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var name    = document.getElementById('name').value.trim();
+      var email   = document.getElementById('email').value.trim();
+      var message = document.getElementById('message').value.trim();
+
+      if (!name || !email || !message) {
+        alert('Please fill in all fields before sending.');
+        return;
+      }
+
+      var body = [
+        'Name: ' + name,
+        'Email: ' + email,
+        '',
+        message
+      ].join('\n');
+
+      var mailto = 'mailto:silviaelenaok@gmail.com'
+        + '?subject=' + encodeURIComponent('Workflow inquiry from ' + name)
+        + '&body='    + encodeURIComponent(body);
+
+      window.location.href = mailto;
+    });
+  </script>
+
+</body>
+</html>
