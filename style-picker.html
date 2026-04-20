@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Style Picker — Data &amp; Workflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Instrument+Serif:ital@0;1&family=Josefin+Sans:wght@300;400;600&family=Nunito:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;1,300&family=Barlow:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0F0E0C;
+      --surface: #181714;
+      --ink: #EDE9E1;
+      --ink-muted: #7A7670;
+      --rule: #252420;
+      --accent: #C4975A;
+      --selected: #C4975A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Syne', system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ─────────────────────────────────── */
+    .page { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 6rem; }
+
+    header {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 3rem;
+    }
+    .header-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    header h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+    header p {
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+      max-width: 52ch;
+    }
+
+    /* ── Section headers ────────────────────────── */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .section-head h2 {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .section-head span {
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      opacity: 0.6;
+    }
+
+    /* ── Font grid ──────────────────────────────── */
+    .font-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      margin-bottom: 4rem;
+    }
+
+    .font-card {
+      background: var(--surface);
+      padding: 2rem;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+      border: 2px solid transparent;
+      margin: -1px;
+    }
+    .font-card:hover { background: #1E1D1A; }
+    .font-card.selected {
+      background: #1A1510;
+      border-color: var(--accent);
+      z-index: 1;
+    }
+    .font-card.selected .font-check { opacity: 1; }
+
+    .font-check {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 0.7rem;
+      color: #0F0E0C;
+      font-weight: 700;
+    }
+
+    .font-style-name {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .font-headline {
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .font-body-sample {
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: var(--ink-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .font-names {
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #4A4845;
+      border-top: 1px solid var(--rule);
+      padding-top: 0.75rem;
+    }
+
+    /* ── Palette grid ───────────────────────────── */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+
+    .palette-card {
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 2px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      position: relative;
+    }
+    .palette-card:hover { transform: translateY(-2px); }
+    .palette-card.selected { border-color: var(--accent); }
+    .palette-card.selected .palette-check { opacity: 1; }
+
+    .palette-check {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 1.4rem;
+      height: 1.4rem;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 0.7rem;
+      color: #0F0E0C;
+      font-weight: 700;
+      z-index: 2;
+    }
+
+    .palette-swatches {
+      display: flex;
+      height: 80px;
+    }
+    .swatch { flex: 1; }
+
+    .palette-info {
+      padding: 1rem 1.1rem;
+      background: var(--surface);
+    }
+    .palette-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .palette-desc {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+    }
+
+    /* ── Portfolio section ──────────────────────── */
+    .portfolio-section { margin-bottom: 4rem; }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .portfolio-slot {
+      aspect-ratio: 4/3;
+      border: 1px dashed #3A3835;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .portfolio-slot:hover { border-color: var(--accent); background: #1A1916; }
+    .portfolio-slot.has-image { border-style: solid; border-color: var(--rule); }
+    .portfolio-slot.has-image:hover { border-color: var(--accent); }
+
+    .portfolio-slot img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slot-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,14,12,0.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .portfolio-slot.has-image:hover .slot-overlay { opacity: 1; }
+
+    .slot-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px dashed #4A4845;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-muted);
+    }
+    .slot-label {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .slot-remove {
+      font-size: 0.7rem;
+      color: #C45A5A;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .portfolio-add-btn {
+      margin-top: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: none;
+      border: 1px solid var(--accent);
+      padding: 0.65rem 1.4rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .portfolio-add-btn:hover { background: var(--accent); color: var(--bg); }
+
+    /* ── Apply bar ──────────────────────────────── */
+    .apply-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--rule);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      z-index: 50;
+    }
+
+    .apply-selections {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.8rem;
+    }
+
+    .apply-item { display: flex; flex-direction: column; gap: 0.1rem; }
+    .apply-item-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .apply-item-value { color: var(--accent); font-weight: 500; }
+
+    .apply-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 0.8rem 1.75rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .apply-btn:hover { opacity: 0.85; }
+    .apply-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* ── Hidden file input ───────── */
+    #fileInput { display: none; }
+
+    /* ── Preview modal ──────────────────────────── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,14,12,0.9);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      max-width: 680px;
+      width: 100%;
+      padding: 2.5rem;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none; border: none; cursor: pointer;
+      color: var(--ink-muted); font-size: 1.3rem; line-height: 1;
+    }
+    .modal-close:hover { color: var(--ink); }
+    .modal h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: 1.8rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .modal p {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      margin-bottom: 1.5rem;
+    }
+    .modal-copy {
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      padding: 1rem 1.2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-bottom: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .modal-actions { display: flex; gap: 1rem; }
+    .modal-btn {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.7rem 1.5rem;
+      cursor: pointer;
+      border: 1px solid var(--accent);
+      transition: background 0.2s, color 0.2s;
+    }
+    .modal-btn.primary { background: var(--accent); color: var(--bg); }
+    .modal-btn.primary:hover { opacity: 0.85; }
+    .modal-btn.secondary { background: none; color: var(--accent); }
+    .modal-btn.secondary:hover { background: var(--accent); color: var(--bg); }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <header>
+    <p class="header-label">Style Explorer</p>
+    <h1>Choose your look &amp; feel.</h1>
+    <p>Pick a font pairing and a color palette. Your choices will apply to the main landing page. You can also upload portfolio images below.</p>
+  </header>
+
+  <!-- ══ FONTS ══════════════════════════════════════════════════ -->
+  <div class="section-head">
+    <h2>01 — Font Pairings</h2>
+    <span>Click to select</span>
+  </div>
+
+  <div class="font-grid" id="fontGrid">
+
+    <!-- 1. Fraunces + Syne (current) -->
+    <div class="font-card selected" data-font="fraunces-syne" data-display="Fraunces" data-body="Syne">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Current — Dark Editorial</p>
+      <p class="font-headline" style="font-family:'Fraunces',serif;font-size:2.2rem;font-weight:300;">Your assets, <em>finally</em> under control.</p>
+      <p class="font-body-sample" style="font-family:'Syne',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Fraunces (display) + Syne (body)</p>
+    </div>
+
+    <!-- 2. Playfair + DM Sans -->
+    <div class="font-card" data-font="playfair-dm" data-display="Playfair Display" data-body="DM Sans">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Warm Editorial</p>
+      <p class="font-headline" style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:400;">Your assets, <em>finally</em> under control.</p>
+      <p class="font-body-sample" style="font-family:'DM Sans',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Playfair Display (display) + DM Sans (body)</p>
+    </div>
+
+    <!-- 3. Cormorant + Syne -->
+    <div class="font-card" data-font="cormorant-syne" data-display="Cormorant Garamond" data-body="Syne">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Elegant / Ma</p>
+      <p class="font-headline" style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;">Your assets, <em>finally</em> under control.</p>
+      <p class="font-body-sample" style="font-family:'Syne',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Cormorant Garamond (display) + Syne (body)</p>
+    </div>
+
+    <!-- 4. Space Grotesk + Space Grotesk -->
+    <div class="font-card" data-font="space-grotesk" data-display="Space Grotesk" data-body="Space Grotesk">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Functionalist / Dieter Rams</p>
+      <p class="font-headline" style="font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:300;letter-spacing:-0.03em;">Your assets, finally under control.</p>
+      <p class="font-body-sample" style="font-family:'Space Grotesk',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Space Grotesk (display + body)</p>
+    </div>
+
+    <!-- 5. Barlow Condensed + Barlow -->
+    <div class="font-card" data-font="barlow" data-display="Barlow Condensed" data-body="Barlow">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Swiss / Grid-forward</p>
+      <p class="font-headline" style="font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:600;letter-spacing:0.01em;text-transform:uppercase;">Your Assets, Finally Under Control.</p>
+      <p class="font-body-sample" style="font-family:'Barlow',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Barlow Condensed (display) + Barlow (body)</p>
+    </div>
+
+    <!-- 6. Josefin Sans + EB Garamond -->
+    <div class="font-card" data-font="josefin-garamond" data-display="Josefin Sans" data-body="EB Garamond">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Art Deco / Geometric</p>
+      <p class="font-headline" style="font-family:'Josefin Sans',sans-serif;font-size:2rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;">Your Assets,<br>Finally Under Control.</p>
+      <p class="font-body-sample" style="font-family:'EB Garamond',serif;font-size:1rem;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Josefin Sans (display) + EB Garamond (body)</p>
+    </div>
+
+    <!-- 7. Instrument Serif + Jost -->
+    <div class="font-card" data-font="instrument-jost" data-display="Instrument Serif" data-body="Jost">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Contemporary Editorial</p>
+      <p class="font-headline" style="font-family:'Instrument Serif',serif;font-size:2.4rem;font-weight:400;">Your assets, <em>finally</em> under control.</p>
+      <p class="font-body-sample" style="font-family:'Jost',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Instrument Serif (display) + Jost (body)</p>
+    </div>
+
+    <!-- 8. Bebas Neue + Syne -->
+    <div class="font-card" data-font="bebas-syne" data-display="Bebas Neue" data-body="Syne">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Bold / High-Impact</p>
+      <p class="font-headline" style="font-family:'Bebas Neue',sans-serif;font-size:3.2rem;font-weight:400;letter-spacing:0.04em;">Your Assets, Finally Under Control.</p>
+      <p class="font-body-sample" style="font-family:'Syne',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Bebas Neue (display) + Syne (body)</p>
+    </div>
+
+    <!-- 9. Space Mono + Space Grotesk -->
+    <div class="font-card" data-font="mono-grotesk" data-display="Space Mono" data-body="Space Grotesk">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Brutalist / Raw</p>
+      <p class="font-headline" style="font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;letter-spacing:-0.02em;">Your assets, finally<br>under control.</p>
+      <p class="font-body-sample" style="font-family:'Space Grotesk',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Space Mono (display) + Space Grotesk (body)</p>
+    </div>
+
+    <!-- 10. Nunito + Nunito -->
+    <div class="font-card" data-font="nunito" data-display="Nunito" data-body="Nunito">
+      <div class="font-check">✓</div>
+      <p class="font-style-name">Scandinavian / Warm</p>
+      <p class="font-headline" style="font-family:'Nunito',sans-serif;font-size:2.2rem;font-weight:300;letter-spacing:-0.01em;">Your assets, <em>finally</em> under control.</p>
+      <p class="font-body-sample" style="font-family:'Nunito',sans-serif;">Structure and flow for creative systems. 10+ years of metadata operations.</p>
+      <p class="font-names">Nunito (display + body)</p>
+    </div>
+
+  </div>
+
+  <!-- ══ PALETTES ════════════════════════════════════════════════ -->
+  <div class="section-head">
+    <h2>02 — Color Palettes</h2>
+    <span>Click to select</span>
+  </div>
+
+  <div class="palette-grid" id="paletteGrid">
+
+    <div class="palette-card selected" data-palette="dark-amber" data-name="Dark Amber">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#0F0E0C;"></div>
+        <div class="swatch" style="background:#181714;"></div>
+        <div class="swatch" style="background:#EDE9E1;"></div>
+        <div class="swatch" style="background:#C4975A;"></div>
+        <div class="swatch" style="background:#7A7670;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Dark Amber</p>
+        <p class="palette-desc">Current — warm charcoal, cream, gold</p>
+      </div>
+    </div>
+
+    <div class="palette-card" data-palette="warm-cream" data-name="Warm Cream">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#F7F4EF;"></div>
+        <div class="swatch" style="background:#EFECE6;"></div>
+        <div class="swatch" style="background:#18170F;"></div>
+        <div class="swatch" style="background:#9B6E35;"></div>
+        <div class="swatch" style="background:#8A8478;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Warm Cream</p>
+        <p class="palette-desc">Off-white background, amber accent</p>
+      </div>
+    </div>
+
+    <div class="palette-card" data-palette="midnight-blue" data-name="Midnight Blue">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#0A0E18;"></div>
+        <div class="swatch" style="background:#121827;"></div>
+        <div class="swatch" style="background:#E8EBF2;"></div>
+        <div class="swatch" style="background:#6B9FD4;"></div>
+        <div class="swatch" style="background:#6B7080;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Midnight Blue</p>
+        <p class="palette-desc">Deep navy, cool blue accent</p>
+      </div>
+    </div>
+
+    <div class="palette-card" data-palette="forest" data-name="Forest">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#0C110D;"></div>
+        <div class="swatch" style="background:#141A14;"></div>
+        <div class="swatch" style="background:#E8EDE5;"></div>
+        <div class="swatch" style="background:#6B9B62;"></div>
+        <div class="swatch" style="background:#6B7268;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Forest</p>
+        <p class="palette-desc">Deep green, muted sage accent</p>
+      </div>
+    </div>
+
+    <div class="palette-card" data-palette="terracotta" data-name="Terracotta">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#F5F0EB;"></div>
+        <div class="swatch" style="background:#EDE6DE;"></div>
+        <div class="swatch" style="background:#1E1714;"></div>
+        <div class="swatch" style="background:#B5603A;"></div>
+        <div class="swatch" style="background:#8C7A6E;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Terracotta</p>
+        <p class="palette-desc">Warm linen, clay accent</p>
+      </div>
+    </div>
+
+    <div class="palette-card" data-palette="cool-slate" data-name="Cool Slate">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#F2F4F6;"></div>
+        <div class="swatch" style="background:#E8EAED;"></div>
+        <div class="swatch" style="background:#1A1E24;"></div>
+        <div class="swatch" style="background:#3B6EA5;"></div>
+        <div class="swatch" style="background:#7A8390;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Cool Slate</p>
+        <p class="palette-desc">Light grey, corporate blue accent</p>
+      </div>
+    </div>
+
+    <div class="palette-card" data-palette="dusty-rose" data-name="Dusty Rose">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#F7F2F2;"></div>
+        <div class="swatch" style="background:#EFE7E7;"></div>
+        <div class="swatch" style="background:#1E1616;"></div>
+        <div class="swatch" style="background:#A85C6B;"></div>
+        <div class="swatch" style="background:#8C7878;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Dusty Rose</p>
+        <p class="palette-desc">Blush whites, muted rose accent</p>
+      </div>
+    </div>
+
+    <div class="palette-card" data-palette="pure-black" data-name="Pure Contrast">
+      <div class="palette-check">✓</div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background:#000000;"></div>
+        <div class="swatch" style="background:#111111;"></div>
+        <div class="swatch" style="background:#FFFFFF;"></div>
+        <div class="swatch" style="background:#FFFFFF;border-left:2px solid #333;"></div>
+        <div class="swatch" style="background:#555555;"></div>
+      </div>
+      <div class="palette-info">
+        <p class="palette-name">Pure Contrast</p>
+        <p class="palette-desc">Black + white, no accent color</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ PORTFOLIO ══════════════════════════════════════════════ -->
+  <div class="section-head" style="margin-top:1rem;">
+    <h2>03 — Portfolio Images</h2>
+    <span>Up to 6 images</span>
+  </div>
+
+  <div class="portfolio-section">
+    <p style="font-size:0.88rem;color:var(--ink-muted);margin-bottom:1.5rem;max-width:54ch;">Upload screenshots of your Airtable setups, FileMaker layouts, workflow docs, or any work samples you'd like to showcase. These will appear in a portfolio section on your landing page.</p>
+
+    <div class="portfolio-grid" id="portfolioGrid">
+      <div class="portfolio-slot" id="slot-0" onclick="triggerUpload(0)">
+        <div class="slot-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <span class="slot-label">Add image</span>
+      </div>
+      <div class="portfolio-slot" id="slot-1" onclick="triggerUpload(1)">
+        <div class="slot-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <span class="slot-label">Add image</span>
+      </div>
+      <div class="portfolio-slot" id="slot-2" onclick="triggerUpload(2)">
+        <div class="slot-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <span class="slot-label">Add image</span>
+      </div>
+      <div class="portfolio-slot" id="slot-3" onclick="triggerUpload(3)">
+        <div class="slot-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <span class="slot-label">Add image</span>
+      </div>
+      <div class="portfolio-slot" id="slot-4" onclick="triggerUpload(4)">
+        <div class="slot-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <span class="slot-label">Add image</span>
+      </div>
+      <div class="portfolio-slot" id="slot-5" onclick="triggerUpload(5)">
+        <div class="slot-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <span class="slot-label">Add image</span>
+      </div>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" />
+  </div>
+
+</div><!-- /page -->
+
+<!-- ── Apply bar ──────────────────────────────────────────────── -->
+<div class="apply-bar">
+  <div class="apply-selections">
+    <div class="apply-item">
+      <span class="apply-item-label">Font</span>
+      <span class="apply-item-value" id="selectedFontLabel">Fraunces + Syne</span>
+    </div>
+    <div class="apply-item">
+      <span class="apply-item-label">Palette</span>
+      <span class="apply-item-value" id="selectedPaletteLabel">Dark Amber</span>
+    </div>
+    <div class="apply-item">
+      <span class="apply-item-label">Images</span>
+      <span class="apply-item-value" id="selectedImagesLabel">0 uploaded</span>
+    </div>
+  </div>
+  <button class="apply-btn" id="applyBtn" onclick="showSummary()">Apply to landing page →</button>
+</div>
+
+<!-- ── Summary modal ──────────────────────────────────────────── -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Your style choices</h3>
+    <p>Share this summary with me in the chat and I'll rebuild the landing page with your selections.</p>
+    <div class="modal-copy" id="modalCopy"></div>
+    <div class="modal-actions">
+      <button class="modal-btn primary" onclick="copyToClipboard()">Copy to clipboard</button>
+      <button class="modal-btn secondary" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var selectedFont = { id: 'fraunces-syne', display: 'Fraunces', body: 'Syne' };
+  var selectedPalette = { id: 'dark-amber', name: 'Dark Amber' };
+  var uploadedImages = {};
+  var currentSlot = null;
+
+  // ── Font selection ─────────────────────────────
+  document.getElementById('fontGrid').addEventListener('click', function(e) {
+    var card = e.target.closest('.font-card');
+    if (!card) return;
+    document.querySelectorAll('.font-card').forEach(function(c) { c.classList.remove('selected'); });
+    card.classList.add('selected');
+    selectedFont = { id: card.dataset.font, display: card.dataset.display, body: card.dataset.body };
+    document.getElementById('selectedFontLabel').textContent = card.dataset.display + ' + ' + card.dataset.body;
+  });
+
+  // ── Palette selection ──────────────────────────
+  document.getElementById('paletteGrid').addEventListener('click', function(e) {
+    var card = e.target.closest('.palette-card');
+    if (!card) return;
+    document.querySelectorAll('.palette-card').forEach(function(c) { c.classList.remove('selected'); });
+    card.classList.add('selected');
+    selectedPalette = { id: card.dataset.palette, name: card.dataset.name };
+    document.getElementById('selectedPaletteLabel').textContent = card.dataset.name;
+  });
+
+  // ── Image upload ───────────────────────────────
+  function triggerUpload(slotIndex) {
+    var slot = document.getElementById('slot-' + slotIndex);
+    if (slot.classList.contains('has-image')) return;
+    currentSlot = slotIndex;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('fileInput').click();
+  }
+
+  document.getElementById('fileInput').addEventListener('change', function(e) {
+    if (!e.target.files.length || currentSlot === null) return;
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var slot = document.getElementById('slot-' + currentSlot);
+      slot.classList.add('has-image');
+      slot.innerHTML = '<img src="' + ev.target.result + '" alt="Portfolio image ' + (currentSlot+1) + '" />'
+        + '<div class="slot-overlay">'
+        + '<span class="slot-remove" onclick="removeImage(' + currentSlot + ');event.stopPropagation();">✕ Remove</span>'
+        + '</div>';
+      slot.onclick = null;
+      uploadedImages[currentSlot] = { name: file.name, data: ev.target.result };
+      updateImageCount();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function removeImage(slotIndex) {
+    var slot = document.getElementById('slot-' + slotIndex);
+    slot.classList.remove('has-image');
+    slot.innerHTML = '<div class="slot-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><span class="slot-label">Add image</span>';
+    slot.onclick = function() { triggerUpload(slotIndex); };
+    delete uploadedImages[slotIndex];
+    updateImageCount();
+  }
+
+  function updateImageCount() {
+    var count = Object.keys(uploadedImages).length;
+    document.getElementById('selectedImagesLabel').textContent = count + ' uploaded';
+  }
+
+  // ── Summary modal ──────────────────────────────
+  function showSummary() {
+    var imageNames = Object.values(uploadedImages).map(function(img) { return img.name; });
+    var summary = 'STYLE SELECTIONS\n'
+      + '────────────────\n'
+      + 'Font pairing:  ' + selectedFont.display + ' (headlines) + ' + selectedFont.body + ' (body)\n'
+      + 'Color palette: ' + selectedPalette.name + '\n'
+      + 'Portfolio images: ' + (imageNames.length ? imageNames.join(', ') : 'none uploaded') + '\n\n'
+      + 'Please rebuild the landing page with these choices.';
+    document.getElementById('modalCopy').textContent = summary;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  function copyToClipboard() {
+    var text = document.getElementById('modalCopy').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.querySelector('.modal-btn.primary');
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.textContent = 'Copy to clipboard'; }, 2000);
+    });
+  }
+
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+</body>
+</html>
