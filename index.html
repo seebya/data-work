@@ -6,7 +6,7 @@
   <title>Fieldwork — Data Workflow Consulting</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap" rel="stylesheet" />
   <style>
     /* ── Tokens ─────────────────────────────────────────────── */
     :root {
@@ -25,7 +25,7 @@
       --accent:    #E8714A;
       --accent-lt: #FAEAE4;
 
-      --f: 'Space Grotesk', system-ui, sans-serif;
+      --f: 'Lato', system-ui, sans-serif;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
       --max-w: 72rem;
       --gap: 1.5rem;
@@ -126,7 +126,7 @@
     }
 
     .hero-fw {
-      font-size: clamp(5.5rem, 18vw, 15rem);
+      font-size: clamp(3.5rem, 12vw, 10rem);
       font-weight: 700;
       letter-spacing: -0.04em;
       line-height: 0.88;
@@ -505,10 +505,6 @@
             Tell me what you're dealing with. Too many assets, a broken handoff, a Drive
             that nobody can navigate. I'll take a look and tell you what I can do.
           </p>
-          <a href="mailto:silviaelenaok@gmail.com" class="contact-link reveal d2">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            silviaelenaok@gmail.com
-          </a>
         </div>
         <form class="form reveal d1" id="contactForm" novalidate>
           <div class="f-row">
@@ -536,7 +532,6 @@
     <div class="wrap">
       <div class="foot-row">
         <p class="foot-copy">&copy; 2026 Fieldwork</p>
-        <a href="mailto:silviaelenaok@gmail.com" class="foot-email">silviaelenaok@gmail.com</a>
       </div>
     </div>
   </footer>
@@ -848,8 +843,9 @@
     var email   = document.getElementById('email').value.trim();
     var message = document.getElementById('message').value.trim();
     if (!name || !email || !message) { alert('Please fill in all fields.'); return; }
-    window.location.href = 'mailto:silviaelenaok@gmail.com'
-      + '?subject=' + encodeURIComponent('Workflow inquiry from ' + name)
+    var dest = ['silviaelenaok', 'gmail.com'].join('@');
+    window.location.href = 'mailto:' + dest
+      + '?subject=' + encodeURIComponent('Fieldwork inquiry from ' + name)
       + '&body='    + encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + message);
   });
   </script>
