@@ -126,16 +126,24 @@
     }
 
     .hero-fw {
-      font-size: clamp(2rem, 10vw, 10rem);
+      font-size: 14vw;
       font-weight: 900;
-      letter-spacing: 0.06em;
-      padding-inline: 3%;
+      letter-spacing: 0;
+      padding-inline: 0;
       line-height: 0.88;
       color: var(--green-bright);
       text-transform: uppercase;
-      text-align: center;
+      text-align: left;
       margin-bottom: 2.5rem;
       white-space: nowrap;
+    }
+    @media (min-width: 640px) {
+      .hero-fw {
+        font-size: clamp(5rem, 13vw, 11rem);
+        letter-spacing: 0.08em;
+        padding-inline: 3%;
+        text-align: center;
+      }
     }
 
     .hero-bottom {
