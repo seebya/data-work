@@ -72,7 +72,6 @@
     .hero {
       position: relative;
       background: var(--green-dark);
-      min-height: 90svh;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -539,22 +538,31 @@
 
     function computeTargets() {
       if (!W || !H) return;
-      // Place clusters just above the FIELDWORK heading, adapting to any screen height
-      var cy = H * 0.36;
-      var fwEl = document.querySelector('.hero-fw');
+      // Default fallback
+      var cy  = H * 0.42;
+      var cx0 = W * 0.15, cx1 = W * 0.50, cx2 = W * 0.85;
+
+      var fwEl   = document.querySelector('.hero-fw');
       var heroEl = canvas.parentElement;
       if (fwEl && heroEl) {
         var heroRect = heroEl.getBoundingClientRect();
         var fwRect   = fwEl.getBoundingClientRect();
         if (heroRect.height > 0) {
-          var fwBottomRatio = (fwRect.bottom - heroRect.top) / heroRect.height;
-          cy = H * Math.min(0.85, fwBottomRatio + 0.12);
+          // Y: sit just below the FIELDWORK text — like a true underline
+          cy = (fwRect.bottom - heroRect.top) + 28;
+          // X: spread exactly across FIELDWORK's rendered width
+          var fwLeft  = fwRect.left  - heroRect.left;
+          var fwRight = fwRect.right - heroRect.left;
+          var fwW     = fwRight - fwLeft;
+          cx0 = fwLeft + fwW * 0.15;
+          cx1 = fwLeft + fwW * 0.50;
+          cx2 = fwLeft + fwW * 0.85;
         }
       }
       var centers = [
-        { x: W * 0.22, y: cy },
-        { x: W * 0.50, y: cy },
-        { x: W * 0.78, y: cy }
+        { x: cx0, y: cy },
+        { x: cx1, y: cy },
+        { x: cx2, y: cy }
       ];
 
       for (var i = 0; i < N; i++) {
