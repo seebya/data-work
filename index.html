@@ -68,37 +68,6 @@
       padding-inline: var(--gap);
     }
 
-    /* ── Nav ─────────────────────────────────────────────────── */
-    nav {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      z-index: 50;
-    }
-    .nav-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-block: 1.4rem;
-    }
-    .nav-brand {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-    }
-    .nav-cta {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--green-bright);
-      border-bottom: 1.5px solid currentColor;
-      padding-bottom: 1px;
-      transition: opacity 0.18s;
-    }
-    .nav-cta:hover { opacity: 0.65; }
-
     /* ── Hero ────────────────────────────────────────────────── */
     .hero {
       position: relative;
@@ -106,7 +75,7 @@
       min-height: 90svh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: flex-start;
       overflow: hidden;
     }
 
@@ -122,6 +91,7 @@
     .hero-content {
       position: relative;
       z-index: 2;
+      padding-top: 3.5rem;
       padding-bottom: 4rem;
     }
 
@@ -194,39 +164,6 @@
       font-size: 0.75rem;
       color: rgba(255,255,255,0.35);
     }
-
-    /* Below-hero sticky nav */
-    .sticky-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--bg);
-      border-bottom: 1px solid var(--rule);
-    }
-    .sticky-nav-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-block: 1rem;
-    }
-    .sticky-brand {
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink-mid);
-    }
-    .sticky-cta {
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border-bottom: 1.5px solid currentColor;
-      padding-bottom: 1px;
-      transition: opacity 0.18s;
-    }
-    .sticky-cta:hover { opacity: 0.65; }
 
     /* ── Sections ────────────────────────────────────────────── */
     section { padding-block: 5.5rem; }
@@ -340,15 +277,6 @@
 
   <!-- ── Hero ──────────────────────────────────────────────────── -->
   <header class="hero">
-    <nav>
-      <div class="wrap">
-        <div class="nav-row">
-          <span class="nav-brand">Fieldwork</span>
-          <a href="#contact" class="nav-cta">Work together</a>
-        </div>
-      </div>
-    </nav>
-
     <canvas id="nodeCanvas" aria-hidden="true"></canvas>
 
     <div class="hero-content">
@@ -369,16 +297,6 @@
       </div>
     </div>
   </header>
-
-  <!-- ── Sticky nav below fold ─────────────────────────────────── -->
-  <div class="sticky-nav">
-    <div class="wrap">
-      <div class="sticky-nav-row">
-        <span class="sticky-brand">Fieldwork</span>
-        <a href="#contact" class="sticky-cta">Work together</a>
-      </div>
-    </div>
-  </div>
 
   <!-- ── What I do ─────────────────────────────────────────────── -->
   <section class="what">
@@ -629,8 +547,8 @@
         var heroRect = heroEl.getBoundingClientRect();
         var fwRect   = fwEl.getBoundingClientRect();
         if (heroRect.height > 0) {
-          var fwRatio = (fwRect.top - heroRect.top) / heroRect.height;
-          cy = H * Math.max(0.2, fwRatio - 0.13);
+          var fwBottomRatio = (fwRect.bottom - heroRect.top) / heroRect.height;
+          cy = H * Math.min(0.85, fwBottomRatio + 0.12);
         }
       }
       var centers = [
