@@ -621,8 +621,18 @@
 
     function computeTargets() {
       if (!W || !H) return;
-      // 3 cluster centers, horizontally distributed, sit in upper portion above text
+      // Place clusters just above the FIELDWORK heading, adapting to any screen height
       var cy = H * 0.36;
+      var fwEl = document.querySelector('.hero-fw');
+      var heroEl = canvas.parentElement;
+      if (fwEl && heroEl) {
+        var heroRect = heroEl.getBoundingClientRect();
+        var fwRect   = fwEl.getBoundingClientRect();
+        if (heroRect.height > 0) {
+          var fwRatio = (fwRect.top - heroRect.top) / heroRect.height;
+          cy = H * Math.max(0.2, fwRatio - 0.13);
+        }
+      }
       var centers = [
         { x: W * 0.22, y: cy },
         { x: W * 0.50, y: cy },
